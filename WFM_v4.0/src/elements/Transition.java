@@ -1,7 +1,9 @@
 package elements;
 
+import java.awt.Dimension;
 import java.awt.Point;
 
+import javax.swing.JFrame;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -21,30 +23,31 @@ public class Transition {
 	public Node n2;
 	
 	//@XmlTransient
-	public Point p1;
+	private Point p1;
 	//@XmlTransient
-	public Point p2;
+	private Point p2;
 	
 	@XmlTransient
 	public TransitionPanel panel;
 	
 	//transition identification
 	@XmlTransient
-	public int tran_id;
+	private int tranIndex;
 	
-	int pos_x;
-	int pos_y;
+	private int posX;
+	private int posY;
 
 	//transition values
-	public String tran_code;
-	public String desc;
-	public String language;
+	private String tranCode;
+	private String descrizione;
+	private String language;
 	
 	@XmlTransient
-	public WorkFlow tranWF;
+	private WorkFlow tranWF;
 	@XmlTransient
-	public ArrowPanel arrow;
+	private ArrowPanel arrow;
 	
+	private int freccia; //contiene l'indice dell'ultima transizione costruita fra due stessi nodi; -1 altrimenti
 	
 	/*
 	 *  CONSTRUCTORS
@@ -54,16 +57,23 @@ public class Transition {
 		this.panel = new TransitionPanel();
 	}
 
-	public Transition(Node n1, Node n2) {
+	public Transition(Node n1, Node n2, int freccia) {
 		super();
 		this.n1 = n1;
 		this.n2 = n2;
 		this.tranWF = n1.nodeWF;
-		this.arrow = new ArrowPanel(getCenter(n1.pos_x, n1.pos_y, n1.getNode_size().width,  n1.getNode_size().height), 
-				getCenter(n2.pos_x, n2.pos_y, n2.getNode_size().width,  n2.getNode_size().height));
+		this.freccia = freccia;
 		
-		this.pos_x = ((arrow.p1.x + arrow.p2.x)/2) - 112;
-		this.pos_y = (arrow.p1.y + arrow.p2.y)/2 - 50;
+		if(this.freccia == -1) {
+				this.arrow = new ArrowPanel(getCenter(n1.pos_x, n1.pos_y, n1.getNode_size().width,  n1.getNode_size().height), 
+				getCenter(n2.pos_x, n2.pos_y, n2.getNode_size().width,  n2.getNode_size().height));
+				this.posX = ((arrow.p1.x + arrow.p2.x)/2) - 112;
+				this.posY = (arrow.p1.y + arrow.p2.y)/2 - 50;
+		}
+		else {
+			this.posX = this.tranWF.transitions.get(this.freccia).posX + 10;
+			this.posY = this.tranWF.transitions.get(this.freccia).posY  + 2*50;
+		}
 		this.panel = new TransitionPanel(this);
 		
 		paintTransition();
@@ -74,7 +84,7 @@ public class Transition {
 		
 		tranWF.panel.add(panel);
 		panel.setSize(225, 100);
-		panel.setLocation(pos_x, pos_y);
+		panel.setLocation(posX, posY);
 		panel.setVisible(true);
 		panel.repaint();
 		panel.revalidate();
@@ -82,18 +92,16 @@ public class Transition {
 		arrow.p1=getCenter(n1.getPos_x(), n1.getPos_y(), n1.getNode_size().width,  n1.getNode_size().height);
 		arrow.p2=getCenter(n2.getPos_x(), n2.getPos_y(), n2.getNode_size().width,  n2.getNode_size().height);
 		
-		setPos_x((arrow.p1.x + arrow.p2.x)/2 - 112);
-		setPos_y((arrow.p1.y + arrow.p2.y)/2 - 50);
+		setPosX(this.posX);
+		setPosY(this.posY);
 		
 		tranWF.panel.add(arrow);
 		
-		arrow.setSize(1024, 760);
+		arrow.setSize(arrow.getDim());
 		arrow.setVisible(true);
 		arrow.repaint();
 		arrow.revalidate();
-		
-		
-
+				
 	}
 	
 	public Point getCenter (int x1, int y1, int width, int height) {
@@ -156,25 +164,25 @@ public class Transition {
 		this.panel = panel;
 	}
 
-	public int getTran_id() {
-		return tran_id;
+	public int getTranIndex() {
+		return tranIndex;
 	}
-	public void setTran_id(int tran_id) {
-		this.tran_id = tran_id;
+	public void setTranIndex(int tranIndex) {
+		this.tranIndex = tranIndex;
 	}
 
 	public String getTran_code() {
-		return tran_code;
+		return tranCode;
 	}
 	public void setTran_code(String tran_code) {
-		this.tran_code = tran_code;
+		this.tranCode = tran_code;
 	}
 
 	public String getDesc() {
-		return desc;
+		return descrizione;
 	}
-	public void setDesc(String desc) {
-		this.desc = desc;
+	public void setDesc(String descrizione) {
+		this.descrizione = descrizione;
 	}
 
 	public String getLanguage() {
@@ -198,18 +206,18 @@ public class Transition {
 		this.arrow = arrow;
 	}
 
-	public int getPos_x() {
-		return pos_x;
+	public int getPosX() {
+		return posX;
 	}
-	public void setPos_x(int pos_x) {
-		this.pos_x = pos_x;
+	public void setPosX(int posX) {
+		this.posX = posX;
 	}
 
-	public int getPos_y() {
-		return pos_y;
+	public int getPosY() {
+		return posY;
 	}
-	public void setPos_y(int pos_y) {
-		this.pos_y = pos_y;
+	public void setPosY(int posY) {
+		this.posY = posY;
 	}
 	
 	

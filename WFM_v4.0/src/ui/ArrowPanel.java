@@ -1,4 +1,3 @@
-
 package ui;
 
 import java.awt.*;
@@ -7,19 +6,36 @@ import javax.swing.*;
   
 public class ArrowPanel extends JPanel
 {
+
+
 	private static final long serialVersionUID = 1L;
 	int barb;
     double phi;
     public Point p1;
     public Point p2;
-
+    private Dimension dim= new Dimension();
+    
 	public ArrowPanel(Point p1, Point p2)
     {
         barb = 10;                   // barb length
         phi = Math.PI/6;             // 30 degrees barb angle
-        setOpaque(false);
+       // setOpaque(false);
+        setBackground(Color.blue);
         this.p1=p1;
         this.p2=p2;
+        
+        if (p1.x < p2.x) {
+        	this.dim.width = p2.x - p1.x;
+        }
+        else {
+        	this.dim.width = p1.x - p2.x;
+        }
+        if (p1.y < p2.y) {
+        	this.dim.height = p2.y - p1.y;
+        }
+        else {
+        	this.dim.height = p1.y - p2.y;
+        }
     }
 	
     protected void paintComponent(Graphics g)
@@ -29,10 +45,10 @@ public class ArrowPanel extends JPanel
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         double theta;
   
-        double x1 =p1.getX(), y1 = p1.getY(), x2 = p2.getX(), y2 = p2.getY();
+        double x1 =0, y1 = 0, x2 = dim.getWidth(), y2 = dim.getHeight();
   
         g2.setPaint(Color.black);
-        g2.draw(new Line2D.Double(x1, y1, x2, y2));
+        g2.draw(new Line2D.Double(x1, y1, x2 , y2 ));
         theta = Math.atan2(y2 - y1, x2 - x1);
         Point m = new Point();
         m.x=(int) ((x1+x2)/2);
@@ -55,7 +71,16 @@ public class ArrowPanel extends JPanel
     }
     
     
-    @Override
+    
+    public Dimension getDim() {
+		return dim;
+	}
+
+	public void setDim(Dimension dim) {
+		this.dim = dim;
+	}
+
+	@Override
 	public String toString() {
 		return "ArrowPanel [barb=" + barb + ", phi=" + phi + ", p1=" + p1 + ", p2=" + p2 + "]";
 	}

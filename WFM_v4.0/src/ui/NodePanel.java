@@ -1,4 +1,3 @@
-
 package ui;
 
 import javax.swing.JPanel;
@@ -78,8 +77,15 @@ public class NodePanel extends JPanel{
 		            node.nodeWF.setEnd(node);
 		            node.nodeWF.end_taken=true;
 		            for(Node n: node.nodeWF.nodes)
-		            	n.panel.setListener_state(false);
-		            node.nodeWF.transitions.add(new Transition(node.nodeWF.start, node.nodeWF.end));
+		            n.panel.setListener_state(false);
+		            int freccia = -1;
+		            for(Transition t : node.nodeWF.transitions) {
+		            	if ((t.n1==node.nodeWF.start) && (t.n2 ==node.nodeWF.end)) {
+		            		freccia = t.getTranIndex();
+		            		System.out.println(freccia);
+		            	}
+		            }
+		            node.nodeWF.transitions.add(new Transition(node.nodeWF.start, node.nodeWF.end, freccia));
 		            node.nodeWF.panel.add(node.nodeWF.transitions.get(node.nodeWF.transitions.size()-1).panel);
 		            node.nodeWF.transitions.get(node.nodeWF.transitions.size()-1).panel.revalidate();
 		        } 
