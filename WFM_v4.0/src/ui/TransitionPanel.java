@@ -48,7 +48,7 @@ public class TransitionPanel extends JPanel {
 		super();
 		
 		
-		setLocation(transition.getPos_x(), transition.getPos_y());
+		setLocation(transition.getPos_x(), transition.getPos_y());A
 		setSize(225, 100); //225, 100
 		setVisible(true);
 		repaint();
